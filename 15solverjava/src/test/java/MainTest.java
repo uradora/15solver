@@ -17,12 +17,19 @@ import Main.State;
 
 public class MainTest {
     
-    State startState;
-    Integer[] flatBoard;
+    State state;
     
     @Before
     public void setUp() {
-        startState = new State();
+        Integer[][] readyBoard = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};
+        state = new State(readyBoard, 0);
     }
+    
+    @Test
+    public void readyStateIsAGoalState() {
+        assertTrue(Main.isGoal(state));
+    }
+    
+    
     
 }

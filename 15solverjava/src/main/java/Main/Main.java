@@ -84,6 +84,9 @@ public class Main {
     }
     
     public static boolean isGoal(State state) {
+        if (state.calculateManhattanDistance() == 0) {
+            return true;
+        }
         return false;
     }
     

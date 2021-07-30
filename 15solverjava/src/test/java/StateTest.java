@@ -24,7 +24,7 @@ public class StateTest {
     @Before
     public void setUp() {
         startState = new State();
-        int[][] board = startState.getBoard();
+        Integer[][] board = startState.getBoard();
         flatBoard = new Integer[16];
         int index = 0;
         for (int i = 0; i < 4; i++) {
@@ -49,6 +49,18 @@ public class StateTest {
     @Test
     public void startStateHasDistanceOf0() {
         assertEquals(startState.getDistance(), 0);
+    }
+    
+    @Test
+    public void startStateHasManhattanDistanceOfMoreThan0() {
+        assertTrue(startState.calculateManhattanDistance() != 0);
+    }
+    
+    @Test
+    public void readyBoardHasManhattanDistanceOf0() {
+        Integer[][] readyBoard = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};
+        State readyState = new State(readyBoard, 0);
+        assertEquals(readyState.calculateManhattanDistance(), 0);
     }
 
 }
