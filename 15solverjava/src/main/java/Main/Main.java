@@ -31,9 +31,9 @@ public class Main {
     }
     
     public static Path iterate(State state) {
-       PriorityQueue<State> path = new PriorityQueue<>();
-       path.add(state);
-       int bound = state.calculateManhattanDistance();
+        PriorityQueue<State> path = new PriorityQueue<>();
+        path.add(state);
+        int bound = state.calculateManhattanDistance();
         while (true) {
             int distance = search(state, 0, bound, path);
             if (distance < 0) {

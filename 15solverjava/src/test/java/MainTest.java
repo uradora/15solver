@@ -30,6 +30,4 @@ public class MainTest {
         assertTrue(Main.isGoal(state));
     }
     
-    
-    
 }
