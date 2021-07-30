@@ -5,9 +5,6 @@
  */
 package Main;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.HashSet;
 import java.util.ArrayList;
@@ -21,12 +18,33 @@ public class Main {
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String[] args) {
         State startState = new State();
         System.out.println("Start state:");
         printState(startState);
-        search(startState);
- 
+        Path path = iterate(startState);
+        if (path != null) {
+            //print path
+        }
+    }
+    
+    public static Path iterate(State state) {
+       PriorityQueue<State> path = new PriorityQueue<>();
+       path.add(state);
+       int bound = state.calculateManhattanDistance();
+        while (true) {
+            int found = search(state, 0, bound, path);
+            if (found == 0) {
+                return new Path(path, bound);
+            }
+            else if (found == 9999) {
+                return null;
+            }
+            else {
+                bound = found;
+            }
+        }
     }
     
     public static void printState(State state) {
@@ -39,24 +57,32 @@ public class Main {
         }
     }
     
-    public static void search(State startState) {
-        PriorityQueue<State> queue = new PriorityQueue<>();
-        HashSet<State> visited = new HashSet<>();
-        queue.add(startState);
-        while (!(queue.isEmpty())) {
-            State state = queue.poll();
-            if (!(visited.contains(state))) {
-                visited.add(state);
-                //TODO: add check for wincon
-                ArrayList<State> children = state.generateChildren();
-                for (State child : children) {
-                    printState(child);
+    public static int search(State state, int distance, int bound, PriorityQueue<State> path) {
+        int cost = distance + state.calculateManhattanDistance();
+        if (cost > bound) {
+            return cost;
+        }
+        if (isGoal(state)) {
+            return 0;
+        }
+        int min = 9999;
+        ArrayList<State> children = state.generateChildren();
+        for (State child : children) {
+            if (!(path.contains(child))) {
+                path.add(child);
+                int found = search(child, distance + child.calculateManhattanDistance(), bound, path);
+                if (found == 0) {
+                    return 0;
+                } else if (found < min) {
+                    min = found;
                 }
+                path.poll();
             }
         }
+        return min;
     }
     
-    public static boolean isSolved(State state) {
+    public static boolean isGoal(State state) {
         return false;
     }
     
