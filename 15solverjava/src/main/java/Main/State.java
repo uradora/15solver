@@ -19,24 +19,29 @@ public class State implements Comparable<State> {
   
     private ArrayList<State> children;
 
-    private int[][] board;
+    private Integer[][] board;
     
     private int distance;
     
     public State() {
-        int[][] startBoard = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};
-        List<int[]> boardAsList = Arrays.asList(startBoard);
+        Integer[][] startBoard = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};
+        List<Integer[]> boardAsList = Arrays.asList(startBoard);
+        for (int i = 0; i < 4; i++) {
+            List<Integer> row = Arrays.asList(boardAsList.get(i));
+            Collections.shuffle(row);
+            boardAsList.set(i, row.toArray(boardAsList.get(i)));
+        }
         Collections.shuffle(boardAsList);
         this.board = boardAsList.toArray(startBoard);
         this.distance = 0;
     }
 
-    public State(int[][] board, int distance) {
+    public State(Integer[][] board, int distance) {
       this.board = board;
       this.distance = distance;
     }
     
-    public int[][] getBoard() {
+    public Integer[][] getBoard() {
         return this.board;
     }
     
@@ -49,9 +54,16 @@ public class State implements Comparable<State> {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 int curr_value = this.board[i][j];
-                int goal_x = (curr_value - 1) % 4;
-                int goal_y = (curr_value - 1) / 4;
-                manhattan += (Math.abs(goal_x - i) + Math.abs(goal_y - j));
+                int goal_x;
+                int goal_y;
+                if (curr_value == 0) {
+                    goal_x = 3;
+                    goal_y = 3;
+                } else {
+                    goal_x = (curr_value - 1) % 4;
+                    goal_y = (curr_value - 1) / 4;
+                }
+                manhattan += (Math.abs(goal_x - j) + Math.abs(goal_y - i));
             } 
         }
         return manhattan;
@@ -66,5 +78,6 @@ public class State implements Comparable<State> {
         return this.getDistance() - otherState.getDistance();
         
     }
+    
     
 }

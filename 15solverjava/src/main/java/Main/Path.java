@@ -22,4 +22,8 @@ public class Path {
         this.bound = bound;
     }
     
+    public PriorityQueue<State> getPath() {
+        return this.path;
+    }
+    
 }

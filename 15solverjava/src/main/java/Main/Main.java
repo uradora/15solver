@@ -6,7 +6,6 @@
 package Main;
 
 import java.util.PriorityQueue;
-import java.util.HashSet;
 import java.util.ArrayList;
 
 /**
@@ -25,7 +24,9 @@ public class Main {
         printState(startState);
         Path path = iterate(startState);
         if (path != null) {
-            //print path
+            for (State state : path.getPath()) {
+                printState(state);
+            }
         }
     }
     
@@ -34,21 +35,21 @@ public class Main {
        path.add(state);
        int bound = state.calculateManhattanDistance();
         while (true) {
-            int found = search(state, 0, bound, path);
-            if (found == 0) {
+            int distance = search(state, 0, bound, path);
+            if (distance < 0) {
                 return new Path(path, bound);
             }
-            else if (found == 9999) {
+            else if (distance == Integer.MAX_VALUE) {
                 return null;
             }
             else {
-                bound = found;
+                bound = distance;
             }
         }
     }
     
     public static void printState(State state) {
-        int[][] board = state.getBoard();
+        Integer[][] board = state.getBoard();
         for (int i = 0; i < 4; i++) {
            for (int j = 0; j < 4; j++) {
               System.out.print(board[i][j] + " ");
@@ -63,9 +64,9 @@ public class Main {
             return cost;
         }
         if (isGoal(state)) {
-            return 0;
+            return -distance;
         }
-        int min = 9999;
+        int min = Integer.MAX_VALUE;
         ArrayList<State> children = state.generateChildren();
         for (State child : children) {
             if (!(path.contains(child))) {
