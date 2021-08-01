@@ -70,6 +70,7 @@ public class Main {
         ArrayList<State> children = state.generateChildren();
         for (State child : children) {
             if (!(path.contains(child))) {
+                printState(child);
                 path.add(child);
                 int found = search(child, distance + child.calculateManhattanDistance(), bound, path);
                 if (found == 0) {

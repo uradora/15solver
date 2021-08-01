@@ -66,11 +66,82 @@ public class State implements Comparable<State> {
                 manhattan += (Math.abs(goal_x - j) + Math.abs(goal_y - i));
             } 
         }
+        this.distance = this.distance + manhattan;
         return manhattan;
     }
     
     public ArrayList<State> generateChildren() {
-        return new ArrayList<State>();
+        ArrayList<State> children = new ArrayList<State>();
+        Integer[] flatBoard = new Integer[16];
+        int index = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                flatBoard[index++] = this.board[i][j];
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (this.board[i][j] == 0) {
+                    if (i > 0) {
+                        List<Integer> boardAsList = Arrays.asList(flatBoard);
+                        Collections.swap(boardAsList, i, (i-1));
+                        Integer[][] newBoard = new Integer[4][4];
+                        int counter = 0;
+                        for (int x = 0; x < 4; x++) {
+                            for (int y = 0; y < 4; y++) {
+                                newBoard[x][y] = boardAsList.toArray(flatBoard)[y+counter];
+                            }
+                            counter += 4;
+                        }
+                        State child = new State(newBoard, this.distance + 1);
+                        children.add(child);
+                    }
+                    if (i < 3) {
+                        List<Integer> boardAsList = Arrays.asList(flatBoard);
+                        Collections.swap(boardAsList, i, (i+1));
+                        Integer[][] newBoard = new Integer[4][4];
+                        int counter = 0;
+                        for (int x = 0; x < 4; x++) {
+                            for (int y = 0; y < 4; y++) {
+                                newBoard[x][y] = boardAsList.toArray(flatBoard)[y+counter];
+                            }
+                            counter += 4;
+                        }
+                        State child = new State(newBoard, this.distance + 1);
+                        children.add(child);
+                    }
+                    if (j > 0) {
+                        List<Integer> boardAsList = Arrays.asList(flatBoard);
+                        Collections.swap(boardAsList, j, (j-1));
+                        Integer[][] newBoard = new Integer[4][4];
+                        int counter = 0;
+                        for (int x = 0; x < 4; x++) {
+                            for (int y = 0; y < 4; y++) {
+                                newBoard[x][y] = boardAsList.toArray(flatBoard)[y+counter];
+                            }
+                            counter += 4;
+                        }
+                        State child = new State(newBoard, this.distance + 1);
+                        children.add(child);
+                    }
+                    if (j < 3) {
+                        List<Integer> boardAsList = Arrays.asList(flatBoard);
+                        Collections.swap(boardAsList, j, (i+1));
+                        Integer[][] newBoard = new Integer[4][4];
+                        int counter = 0;
+                        for (int x = 0; x < 4; x++) {
+                            for (int y = 0; y < 4; y++) {
+                                newBoard[x][y] = boardAsList.toArray(flatBoard)[y+counter];
+                            }
+                            counter += 4;
+                        }
+                        State child = new State(newBoard, this.distance + 1);
+                        children.add(child);
+                    }
+                }
+            }
+        }
+        return children;
     }
     
     @Override
