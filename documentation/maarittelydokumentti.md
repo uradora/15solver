@@ -16,6 +16,6 @@ Syötettä ei ole. Ohjelma generoi satunnaisen aloitustilan ja sitten löytää 
 
 ## Lähteet
 
-[Optimal 8/15-Puzzle Solver](http://www.brian-borowski.com/software/puzzle/)
+[Optimal 8/15-Puzzle Solver](http://www.brian-borowski.com/software/puzzle/)  
 [Introduction to Artificial Intelligence 2020](https://materiaalit.github.io/intro-to-ai/part1/)  
 [1524 (github.com)](https://github.com/quantumelixir/1524)
