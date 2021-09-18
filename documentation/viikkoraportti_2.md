@@ -1,0 +1,5 @@
+# Viikkoraportti 2
+
+Olen aloittanut ohjelman alustavaa toiminnallisuutta. IDAStar -luokka käynnistää ohjelman rungon, mutta ei vielä tee mitään kovin järkevää. Olen luonut state-luokan mallintamaan mahdollisia pelitiloja. Tämä luokka osaa nyt laskea, onko tietty tila ratkaistavissa, onko tila voittava tila, ja se osaa laskea tilalle Manhattan -etäisyyden eli tässä IDA* -algoritmissa käytössä olevan heuristiikan. Lisäksi olen tehnyt joitakin testejä State-luokalle. Tämä projekti on siis nyt jatkoa kesällä kesken jääneelle projektille, eli olen pitänyt joitakin asioita samana ja joitakin olen parannellut. Olen myös kommentoinut nyt kattavammin koko projektin koodia.
+
+Seuraavaksi lähden jatkamaan IDA* -algoritmin päätoiminnallisuutta, tällä kertaa luoden testejä lomittain koko ajan, jotta kehitys menee sujuvammin. Eriytän ehkä luokkia vielä lisää. Sen lisäksi alan toteuttaa nyt omia tietorakenteita.
