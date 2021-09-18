@@ -42,10 +42,6 @@ public class StateTest {
     
     @Test
     public void readyBoardHasManhattanDistanceOf0() {
-        System.out.println(readyState.calculateManhattanDistance());
-        for (int i = 0; i < 16; i++) {
-            System.out.println(readyState.getBoard()[i]);
-        }
         assertEquals(readyState.calculateManhattanDistance(), 0);
     }
     

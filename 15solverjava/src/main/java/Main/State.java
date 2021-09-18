@@ -76,9 +76,9 @@ public class State implements Comparable<State> {
     public int calculateManhattanDistance() {
         int manhattan = 0;
         for (int i = 0; i < 16; i++) {
-            if (this.board[i] == 0) {
+            if (this.board[i] != 0) {
                 //Tämä laskee nykyisen solun arvon etäisyyden halutusta x-koordinaatista ja halutusta y-koordinaatista yhteen
-                manhattan += (Math.abs((i / 4) - (this.board[i] / 4)) + Math.abs((i % 4) - ((this.board[i] - 1) % 4)));
+                manhattan += (Math.abs((i / 4) - (this.board[i] - 1) / 4) + Math.abs((i % 4) - ((this.board[i] - 1) % 4)));
             }
         }
         this.manhattanDistance = manhattan;
