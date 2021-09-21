@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.lang.Math;
+import java.util.ArrayList;
 
 /**
  *
@@ -83,6 +84,15 @@ public class State implements Comparable<State> {
         }
         this.manhattanDistance = manhattan;
         return manhattan;
+    }
+
+    public ArrayList<State> generateChildren() {
+        ArrayList<State> children = new ArrayList<State>();
+
+    } 
+
+    public void printState() {
+
     }
 
     public boolean stateIsGoal() {
