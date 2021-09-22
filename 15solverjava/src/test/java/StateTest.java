@@ -45,4 +45,10 @@ public class StateTest {
         assertEquals(readyState.calculateManhattanDistance(), 0);
     }
     
+    @Test
+    public void unsolvableStateIsDeterminedCorrectly() {
+        Integer[] unsolvableBoard = {2,1,3,4,5,8,7,6,9,10,12,11,15,13,14,0};
+        State unsolvable = new State(unsolvableBoard, 0);
+        assertEquals(unsolvable.stateCanBeSolved(), false);
+    }
 }

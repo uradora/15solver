@@ -87,12 +87,56 @@ public class State implements Comparable<State> {
     }
 
     public ArrayList<State> generateChildren() {
+        //Luodaan tilan lapsitilat (yhdellä siirrolla saavutettavat)
         ArrayList<State> children = new ArrayList<State>();
-
-    } 
+        for (int i = 0; i < 16; i++) {
+            if (this.board[i] == 0) {
+                //Jos ylhäällä on tilaa, tiilen voi siirtää ylös
+                if ((i / 4) > 0) {
+                    Integer[] newBoard = this.board;
+                    newBoard[i] = this.board[i-4];
+                    newBoard[i-4] = this.board[i];
+                    State newChild = new State(newBoard, this.getDistance());
+                    children.add(newChild);
+                }
+                //Jos vasemmalla on tilaa
+                if ((i % 4) != 0) {
+                    Integer[] newBoard = this.board;
+                    newBoard[i] = this.board[i-1];
+                    newBoard[i-1] = this.board[i];
+                    State newChild = new State(newBoard, this.getDistance());
+                    children.add(newChild);
+                }
+                //Jos oikealla on tilaa
+                if (((i + 1) % 4) != 0) {
+                    Integer[] newBoard = this.board;
+                    newBoard[i] = this.board[i+1];
+                    newBoard[i+1] = this.board[i];
+                    State newChild = new State(newBoard, this.getDistance());
+                    children.add(newChild);
+                }
+                //Jos alhaalla on tilaa
+                if ((i / 4) < 3) {
+                    Integer[] newBoard = this.board;
+                    newBoard[i] = this.board[i+4];
+                    newBoard[i+4] = this.board[i];
+                    State newChild = new State(newBoard, this.getDistance());
+                    children.add(newChild);
+                }
+            }
+        }
+        return children;
+    }
 
     public void printState() {
-
+        for (int i = 0; i < 16; i++) {
+            if (((i + 1) % 4) == 0) {
+                System.out.println();
+            } else {
+                System.out.print(" ");
+            }
+            System.out.print(this.board[i]);
+        }
     }
 
     public boolean stateIsGoal() {
