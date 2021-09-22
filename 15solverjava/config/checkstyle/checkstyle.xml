@@ -3,6 +3,7 @@
 <module name="Checker">
     
     <module name="LineLength"/>
+    <module name="SuppressWarningsFilter"/>
     <module name="TreeWalker">
         <module name="JavadocMethod"/>
         <module name="JavadocType"/>
@@ -15,6 +16,7 @@
         <module name="MethodName"/>
         <module name="PackageName"/>
         <module name="ParameterName"/>
+        <module name="SuppressWarningsHolder"/>
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
         <module name="AvoidStarImport"/>

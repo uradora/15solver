@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author merir
  */
 
-public class IDAStar {
+public final class IDAStar {
 
     public static String startSearch() {
         //Käynnistetään IDA* -polunhaku, luodaan tarvittavat tietorakenteet.
@@ -34,39 +34,47 @@ public class IDAStar {
         }
     }
 
-    public static int search(ArrayDeque<State> path, State state, 
-        int distance, int threshold) {
+    public static int search(final ArrayDeque<State> path, 
+    final State state, final int distance, final int threshold) {
+        State currentState = state;
         if (path.peekLast() != null) {
-            state = path.getLast();
+            currentState = path.getLast();
         }
         System.out.println("Ollaan tilassa: ");
-        state.printState();
-        //Nykyinen etäisyys on heuristiikan ja solmun etäisyyden alkusolmusta summa.
-        int currentDistance = distance + state.calculateManhattanDistance();
+        currentState.printState();
+        //Nykyinen etäisyys on heuristiikan ja solmun etäisyyden
+        //alkusolmusta summa.
+        int currentDistance = distance 
+        + currentState.calculateManhattanDistance();
         System.out.println("Tilan etäisyys: " + currentDistance);
-        //Jos tila on maali niin palautetaan negatiivinen luku merkitsemään, että maali on löydetty.
-        if (state.stateIsGoal()) {
+        //Jos tila on maali niin palautetaan negatiivinen
+        //luku merkitsemään, että maali on löydetty.
+        if (currentState.stateIsGoal()) {
             return -currentDistance;
         }
-        //Jos nykyinen etäisyys on suurempi kuin edellinen threshold, päivitetään sen rajaa.
+        //Jos nykyinen etäisyys on suurempi kuin edellinen threshold,
+        //päivitetään sen rajaa.
         if (currentDistance > threshold) {
             return currentDistance;
         }
         int min = Integer.MAX_VALUE;
         //Luodaan nykyisen tilan kaikki lapset (viereiset tilat)
-        ArrayList<State> children = state.generateChildren();
+        ArrayList<State> children = currentState.generateChildren();
         for (State child : children) {
             if (!(path.contains(child))) {
                 path.add(child);
                 //Rekursiivinen haku tilan lapsille.
-                threshold = search(path, child, (distance + 1), threshold);
-                //Jos löytyy miinusmerkkinen threshold-arvo, se tarkoittaa että maali löytynyt.
-                if (threshold < 0) {
-                    return threshold;
+                int newThreshold = search(path, child, 
+                (distance + 1), threshold);
+                //Jos löytyy miinusmerkkinen threshold-arvo, 
+                //se tarkoittaa että maali löytynyt.
+                if (newThreshold < 0) {
+                    return newThreshold;
                 }
-                //Päivitetään threshold-arvoa jos se on tämänhetkistä minimiä pienempi.
-                if (threshold < min) {
-                    min = threshold;
+                //Päivitetään threshold-arvoa jos se on 
+                //tämänhetkistä minimiä pienempi.
+                if (newThreshold < min) {
+                    min = newThreshold;
                 } 
                 path.removeLast();
             }
