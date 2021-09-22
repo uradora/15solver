@@ -1,10 +1,12 @@
 
 import org.junit.Before;
 import org.junit.Test;
+
+import main.State;
+
 import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.Collections;
-import Main.State;
 
 /**
  *
@@ -48,7 +50,14 @@ public class StateTest {
     @Test
     public void unsolvableStateIsDeterminedCorrectly() {
         Integer[] unsolvableBoard = {2,1,3,4,5,8,7,6,9,10,12,11,15,13,14,0};
-        State unsolvable = new State(unsolvableBoard, 0);
+        State unsolvable = new State(unsolvableBoard, 10);
         assertEquals(unsolvable.stateCanBeSolved(), false);
+    }
+
+    @Test
+    public void solvableStateIsDeterminedCorrectly() {
+        Integer[] solvableBoard = {1,2,3,4,5,8,7,6,9,10,12,11,15,13,14,0};
+        State solvable = new State(solvableBoard, 10);
+        assertEquals(solvable.stateCanBeSolved(), true);
     }
 }

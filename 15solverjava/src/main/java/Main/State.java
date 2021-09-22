@@ -1,4 +1,4 @@
-package Main;
+package main;
         
 //import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,35 +93,47 @@ public class State implements Comparable<State> {
             if (this.board[i] == 0) {
                 //Jos ylhäällä on tilaa, tiilen voi siirtää ylös
                 if ((i / 4) > 0) {
-                    Integer[] newBoard = this.board;
-                    newBoard[i] = this.board[i-4];
-                    newBoard[i-4] = this.board[i];
-                    State newChild = new State(newBoard, this.getDistance());
-                    children.add(newChild);
+                    Integer[] newBoardUp = new Integer[16];
+                    for (int j = 0; j < 16; j++) {
+                        newBoardUp[j] = this.board[j];
+                    } 
+                    newBoardUp[i] = this.board[i-4];
+                    newBoardUp[i-4] = 0;
+                    State newChildUp = new State(newBoardUp, this.getDistance());
+                    children.add(newChildUp);
                 }
                 //Jos vasemmalla on tilaa
                 if ((i % 4) != 0) {
-                    Integer[] newBoard = this.board;
-                    newBoard[i] = this.board[i-1];
-                    newBoard[i-1] = this.board[i];
-                    State newChild = new State(newBoard, this.getDistance());
-                    children.add(newChild);
+                    Integer[] newBoardLeft = new Integer[16];
+                    for (int j = 0; j < 16; j++) {
+                        newBoardLeft[j] = this.board[j];
+                    } 
+                    newBoardLeft[i] = this.board[i-1];
+                    newBoardLeft[i-1] = 0;
+                    State newChildLeft = new State(newBoardLeft, this.getDistance());
+                    children.add(newChildLeft);
                 }
                 //Jos oikealla on tilaa
                 if (((i + 1) % 4) != 0) {
-                    Integer[] newBoard = this.board;
-                    newBoard[i] = this.board[i+1];
-                    newBoard[i+1] = this.board[i];
-                    State newChild = new State(newBoard, this.getDistance());
-                    children.add(newChild);
+                    Integer[] newBoardRight = new Integer[16];
+                    for (int j = 0; j < 16; j++) {
+                        newBoardRight[j] = this.board[j];
+                    } 
+                    newBoardRight[i] = this.board[i+1];
+                    newBoardRight[i+1] = 0;
+                    State newChildRight = new State(newBoardRight, this.getDistance());
+                    children.add(newChildRight);
                 }
                 //Jos alhaalla on tilaa
                 if ((i / 4) < 3) {
-                    Integer[] newBoard = this.board;
-                    newBoard[i] = this.board[i+4];
-                    newBoard[i+4] = this.board[i];
-                    State newChild = new State(newBoard, this.getDistance());
-                    children.add(newChild);
+                    Integer[] newBoardDown = new Integer[16];
+                    for (int j = 0; j < 16; j++) {
+                        newBoardDown[j] = this.board[j];
+                    } 
+                    newBoardDown[i] = this.board[i+4];
+                    newBoardDown[i+4] = 0;
+                    State newChildDown = new State(newBoardDown, this.getDistance());
+                    children.add(newChildDown);
                 }
             }
         }
@@ -130,13 +142,14 @@ public class State implements Comparable<State> {
 
     public void printState() {
         for (int i = 0; i < 16; i++) {
+            System.out.print(this.board[i]);
             if (((i + 1) % 4) == 0) {
                 System.out.println();
             } else {
                 System.out.print(" ");
             }
-            System.out.print(this.board[i]);
         }
+        System.out.println();
     }
 
     public boolean stateIsGoal() {
