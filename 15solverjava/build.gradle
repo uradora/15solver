@@ -4,7 +4,7 @@ apply plugin: 'application'
 apply plugin: 'checkstyle'
 
 
-mainClassName = 'main.main'
+mainClassName = 'main.Main'
 
 
 repositories {

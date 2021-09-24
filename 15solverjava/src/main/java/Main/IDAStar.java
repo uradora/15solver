@@ -1,6 +1,6 @@
 package main;
 
-import java.util.ArrayDeque;
+import java.util.PriorityQueue;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +12,7 @@ public final class IDAStar {
 
     public static String startSearch() {
         //Käynnistetään IDA* -polunhaku, luodaan tarvittavat tietorakenteet.
-        ArrayDeque<State> path = new ArrayDeque<State>();
+        PriorityQueue<State> path = new PriorityQueue<State>();
         State startState = new State();
         boolean isSolvable = startState.stateCanBeSolved();
         System.out.println("Alkutila: ");
@@ -24,6 +24,7 @@ public final class IDAStar {
         int threshold = startState.calculateManhattanDistance();
         System.out.println("Alkuetäisyys: " + threshold);
         path.add(startState);
+        System.out.print(path.comparator());
         while (true) {
             //Jatketaan hakua ja thresholdin kasvattamista, kunnes maali löytyy.
             threshold = search(path, startState, 0, threshold);
@@ -34,11 +35,11 @@ public final class IDAStar {
         }
     }
 
-    public static int search(final ArrayDeque<State> path, 
+    public static int search(final PriorityQueue<State> path, 
     final State state, final int distance, final int threshold) {
         State currentState = state;
-        if (path.peekLast() != null) {
-            currentState = path.getLast();
+        if (path.peek() != null) {
+            currentState = path.poll();
         }
         System.out.println("Ollaan tilassa: ");
         currentState.printState();
@@ -62,6 +63,7 @@ public final class IDAStar {
         ArrayList<State> children = currentState.generateChildren();
         for (State child : children) {
             if (!(path.contains(child))) {
+                child.calculateManhattanDistance();
                 path.add(child);
                 //Rekursiivinen haku tilan lapsille.
                 int newThreshold = search(path, child, 
@@ -69,14 +71,13 @@ public final class IDAStar {
                 //Jos löytyy miinusmerkkinen threshold-arvo, 
                 //se tarkoittaa että maali löytynyt.
                 if (newThreshold < 0) {
-                    return newThreshold;
+                    return -newThreshold;
                 }
                 //Päivitetään threshold-arvoa jos se on 
                 //tämänhetkistä minimiä pienempi.
                 if (newThreshold < min) {
                     min = newThreshold;
                 } 
-                path.removeLast();
             }
         }
         //Palautetaan pienin tällä kierroksella löydetty threshold-arvo
