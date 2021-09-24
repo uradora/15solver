@@ -19,7 +19,7 @@ public class State implements Comparable<State> {
     /**
      * Tilan pelilauta taulukkona.
      */
-    private Integer[][] board;
+    private Integer[] board;
     /**
      * Tilan Manhattan-etäisyys maalista.
      */
@@ -27,20 +27,16 @@ public class State implements Comparable<State> {
 
     public State() {
         @SuppressWarnings("checkstyle:magicnumber")
-        Integer[][] startBoard = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } };
-        List<Integer[]> boardAsList = Arrays.asList(startBoard);
-        for (int i = 0; i < 4; i++) {
-            List<Integer> row = Arrays.asList(boardAsList.get(i));
-            Collections.shuffle(row);
-            boardAsList.set(i, row.toArray(boardAsList.get(i)));
-        }
+        Integer[] startBoard = 
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0};
+        List<Integer> boardAsList = Arrays.asList(startBoard);
         Collections.shuffle(boardAsList);
         this.board = boardAsList.toArray(startBoard);
         this.manhattanDistance = 0;
     }
 
     // Konstruktori luo tilan annetulla pelilaudalla ja etäisyydellä
-    public State(final Integer[][] board, final int manhattanDistance) {
+    public State(final Integer[] board, final int manhattanDistance) {
         this.board = board;
         this.manhattanDistance = manhattanDistance;
     }
@@ -48,7 +44,7 @@ public class State implements Comparable<State> {
     /**
      * @return tilan nykyinen pelilauta
      */
-    public Integer[][] getBoard() {
+    public Integer[] getBoard() {
         return this.board;
     }
 
@@ -59,17 +55,6 @@ public class State implements Comparable<State> {
         return this.manhattanDistance;
     }
 
-    public Integer[] flattenBoard (Integer[][] board) {
-        Integer[] flatBoard = new Integer[16];
-        int index = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                flatBoard[index++] = board[i][j];
-            }
-        }
-        return flatBoard;
-    }
-
     // Tämä tarkistaa, onko tila ratkaistavissa.
     // Ratkaistavan tilan vaadittu inversioiden määrä
     // riippuu siitä, millä rivillä tyhjä paikka on.
@@ -78,13 +63,12 @@ public class State implements Comparable<State> {
         int inversions = 0;
         int zeroPosition = 0;
 
-        Integer[] flatBoard = flattenBoard(this.board);
         for (int i = 0; i < 16; i++) {
-            int tile = flatBoard[i];
+            int tile = this.board[i];
             if (tile != 0) {
                 for (int j = i + 1; j < 16; j++) {
-                    int tileToCompare = flatBoard[j];
-                    // Otetaan talteen nollan paikka
+                    int tileToCompare = this.board[j];
+                    //Otetaan talteen nollan paikka
                     if (tileToCompare == 0) {
                         zeroPosition = j;
                     } else if (tileToCompare < tile) {
@@ -93,9 +77,9 @@ public class State implements Comparable<State> {
                 }
             }
         }
-        // Jos tyhjä on parillisella rivillä (indeksöinti
-        // alkaa nollasta) inversioita on oltava pariton määrä,
-        // ja toisin päin parittomalla rivillä.
+        //Jos tyhjä on parillisella rivillä (indeksöinti 
+        //alkaa nollasta) inversioita on oltava pariton määrä, 
+        //ja toisin päin parittomalla rivillä.
         if (((zeroPosition / 4) % 2) == 0) {
             if (inversions % 2 == 1) {
                 return true;
@@ -114,33 +98,22 @@ public class State implements Comparable<State> {
     @SuppressWarnings("checkstyle:magicnumber")
     public int calculateManhattanDistance() {
         int manhattan = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                int curr_value = this.board[i][j];
-                int goal_x;
-                int goal_y;
-                if (curr_value == 0) {
-                    goal_x = 3;
-                    goal_y = 3;
-                } else {
-                    goal_x = (curr_value - 1) % 4;
-                    goal_y = (curr_value - 1) / 4;
-                }
-                // Tämä laskee nykyisen solun arvon etäisyyden halutusta
-                // x-koordinaatista ja halutusta y-koordinaatista yhteen
-                manhattan += (Math.abs(goal_x - j) + Math.abs(goal_y - i)); 
+        for (int i = 0; i < 16; i++) {
+            if (this.board[i] != 0) {
+                //Tämä laskee nykyisen solun arvon etäisyyden halutusta 
+                //x-koordinaatista ja halutusta y-koordinaatista yhteen
+                manhattan += (Math.abs((i / 4) - (this.board[i] - 1) / 4) 
+                + Math.abs((i % 4) - ((this.board[i] - 1) % 4)));
             }
         }
-        this.manhattanDistance = this.manhattanDistance + manhattan;
+        this.manhattanDistance = manhattan;
         return manhattan;
     }
 
-    public Integer[][] copyBoard() {
-        Integer[][] copy = new Integer[4][4];
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                copy[i][j] = this.board[i][j];
-            }
+    public Integer[] copyBoard() {
+        Integer[] copy = new Integer[16];
+        for (int i = 0; i < 16; i++) {
+            copy[i] = this.board[i];
         }
         return copy;
     }
@@ -157,70 +130,35 @@ public class State implements Comparable<State> {
     @SuppressWarnings("checkstyle:magicnumber")
     public ArrayList<State> generateChildren() {
         ArrayList<State> children = new ArrayList<State>();
-        Integer[] flatBoard = flattenBoard(this.board);
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (this.board[i][j] == 0) {
-                    // Jos ylhäällä on tilaa, tiilen voi siirtää ylös
-                    if (i > 0) {
-                        List<Integer> boardAsList = Arrays.asList(flatBoard);
-                        Collections.swap(boardAsList, i, (i-1));
-                        Integer[][] newBoard = new Integer[4][4];
-                        int counter = 0;
-                        for (int x = 0; x < 4; x++) {
-                            for (int y = 0; y < 4; y++) {
-                                newBoard[x][y] = boardAsList.toArray(flatBoard)[y+counter];
-                            }
-                            counter += 4;
-                        }
-                        State child = new State(newBoard, this.manhattanDistance + 1);
-                        children.add(child);
-                    }
-                    // Jos vasemmalla on tilaa
-                    if (i < 3) {
-                        List<Integer> boardAsList = Arrays.asList(flatBoard);
-                        Collections.swap(boardAsList, i, (i+1));
-                        Integer[][] newBoard = new Integer[4][4];
-                        int counter = 0;
-                        for (int x = 0; x < 4; x++) {
-                            for (int y = 0; y < 4; y++) {
-                                newBoard[x][y] = boardAsList.toArray(flatBoard)[y+counter];
-                            }
-                            counter += 4;
-                        }
-                        State child = new State(newBoard, this.manhattanDistance + 1);
-                        children.add(child);
-                    }
-                    // Jos oikealla on tilaa
-                    if (j > 0) {
-                        List<Integer> boardAsList = Arrays.asList(flatBoard);
-                        Collections.swap(boardAsList, j, (j-1));
-                        Integer[][] newBoard = new Integer[4][4];
-                        int counter = 0;
-                        for (int x = 0; x < 4; x++) {
-                            for (int y = 0; y < 4; y++) {
-                                newBoard[x][y] = boardAsList.toArray(flatBoard)[y+counter];
-                            }
-                            counter += 4;
-                        }
-                        State child = new State(newBoard, this.manhattanDistance + 1);
-                        children.add(child);
-                    }
-                    // Jos alhaalla on tilaa
-                    if (j < 3) {
-                        List<Integer> boardAsList = Arrays.asList(flatBoard);
-                        Collections.swap(boardAsList, j, (i+1));
-                        Integer[][] newBoard = new Integer[4][4];
-                        int counter = 0;
-                        for (int x = 0; x < 4; x++) {
-                            for (int y = 0; y < 4; y++) {
-                                newBoard[x][y] = boardAsList.toArray(flatBoard)[y+counter];
-                            }
-                            counter += 4;
-                        }
-                        State child = new State(newBoard, this.manhattanDistance + 1);
-                        children.add(child);
-                    }
+        for (int i = 0; i < 16; i++) {
+            if (this.board[i] != 0) {
+                // Jos ylhäällä on tilaa, tiilen voi siirtää ylös
+                if (((i / 4) != 0) && (this.board[i - 4] == 0)) {
+                    Integer[] newBoardUp = this.copyBoard();
+                    swap(newBoardUp, i, (i - 4));
+                    State child = new State(newBoardUp, this.manhattanDistance + 1);
+                    children.add(child);
+                }
+                // Jos vasemmalla on tilaa
+                if (((i % 4) != 0) && (this.board[i - 1] == 0)) {
+                    Integer[] newBoardLeft = this.copyBoard();
+                    swap(newBoardLeft, i, (i - 1));
+                    State child = new State(newBoardLeft, this.manhattanDistance + 1);
+                    children.add(child);
+                }
+                // Jos oikealla on tilaa
+                if (((i % 4) != 3)&& (this.board[i + 1] == 0)) {
+                    Integer[] newBoardRight = this.copyBoard();
+                    swap(newBoardRight, i, (i + 1));
+                    State child = new State(newBoardRight, this.manhattanDistance + 1);
+                    children.add(child);
+                }
+                // Jos alhaalla on tilaa
+                if (((i / 4) != 3) && (this.board[i + 4] == 0)) {
+                    Integer[] newBoardDown = this.copyBoard();
+                    swap(newBoardDown, i, (i + 4));
+                    State child = new State(newBoardDown, this.manhattanDistance + 1);
+                    children.add(child);
                 }
             }
         }
@@ -232,12 +170,16 @@ public class State implements Comparable<State> {
      */
     @SuppressWarnings("checkstyle:magicnumber")
     public void printState() {
-        for (int i = 0; i < 4; i++) {
-           for (int j = 0; j < 4; j++) {
-              System.out.print(this.board[i][j] + " ");
+        for (int i = 0; i < 16; i++) {
+            System.out.print(this.board[i]);
+            if (((i + 1) % 4) == 0) {
+                System.out.println();
+            } else {
+                System.out.print(" ");
             }
-            System.out.println(); 
         }
+        System.out.println();
+
     }
 
     /**

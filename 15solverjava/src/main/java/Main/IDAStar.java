@@ -1,6 +1,6 @@
 package main;
 
-import java.util.PriorityQueue;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +12,7 @@ public final class IDAStar {
 
     public static String startSearch() {
         //Käynnistetään IDA* -polunhaku, luodaan tarvittavat tietorakenteet.
-        PriorityQueue<State> path = new PriorityQueue<State>();
+        ArrayDeque<State> path = new ArrayDeque<State>();
         State startState = new State();
         boolean isSolvable = startState.stateCanBeSolved();
         System.out.println("Alkutila: ");
@@ -24,23 +24,21 @@ public final class IDAStar {
         int threshold = startState.calculateManhattanDistance();
         System.out.println("Alkuetäisyys: " + threshold);
         path.add(startState);
-        System.out.print(path.comparator());
         while (true) {
             //Jatketaan hakua ja thresholdin kasvattamista, kunnes maali löytyy.
-            threshold = search(path, startState, 0, threshold);
-            if (threshold < 0) {
+            int t = search(path, 0, threshold);
+            if (t < 0) {
                 return ("Maali löytyi, kokonaisetäisyys on " 
                 + -threshold + " siirtoa");
+            } else {
+                threshold = t;
             }
         }
     }
 
-    public static int search(final PriorityQueue<State> path, 
-    final State state, final int distance, final int threshold) {
-        State currentState = state;
-        if (path.peek() != null) {
-            currentState = path.poll();
-        }
+    public static int search(final ArrayDeque<State> path, 
+    final int distance, final int threshold) {
+        State currentState = path.peek();
         System.out.println("Ollaan tilassa: ");
         currentState.printState();
         //Nykyinen etäisyys on heuristiikan ja solmun etäisyyden
@@ -66,18 +64,19 @@ public final class IDAStar {
                 child.calculateManhattanDistance();
                 path.add(child);
                 //Rekursiivinen haku tilan lapsille.
-                int newThreshold = search(path, child, 
+                int t = search(path, 
                 (distance + 1), threshold);
                 //Jos löytyy miinusmerkkinen threshold-arvo, 
                 //se tarkoittaa että maali löytynyt.
-                if (newThreshold < 0) {
-                    return -newThreshold;
+                if (t < 0) {
+                    return -t;
                 }
                 //Päivitetään threshold-arvoa jos se on 
                 //tämänhetkistä minimiä pienempi.
-                if (newThreshold < min) {
-                    min = newThreshold;
+                if (t < min) {
+                    min = t;
                 } 
+                path.pop();
             }
         }
         //Palautetaan pienin tällä kierroksella löydetty threshold-arvo
