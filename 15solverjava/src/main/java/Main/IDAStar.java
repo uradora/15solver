@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  *
@@ -61,7 +62,6 @@ public final class IDAStar {
         ArrayList<State> children = currentState.generateChildren();
         for (State child : children) {
             if (!(path.contains(child))) {
-                child.calculateManhattanDistance();
                 path.add(child);
                 //Rekursiivinen haku tilan lapsille.
                 int t = search(path, 

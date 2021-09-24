@@ -22,7 +22,7 @@ public class StateTest {
     public void setUp() {
         startState = new State();
         Integer[] readyBoard = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0};
-        readyState = new State(readyBoard, 0);
+        readyState = new State(readyBoard);
     }
 
     @Test
@@ -50,14 +50,14 @@ public class StateTest {
     @Test
     public void unsolvableStateIsDeterminedCorrectly() {
         Integer[] unsolvableBoard = {2,1,3,4,5,8,7,6,9,10,12,11,15,13,14,0};
-        State unsolvable = new State(unsolvableBoard, 10);
+        State unsolvable = new State(unsolvableBoard);
         assertEquals(unsolvable.stateCanBeSolved(), false);
     }
 
     @Test
     public void solvableStateIsDeterminedCorrectly() {
         Integer[] solvableBoard = {1,2,3,4,5,8,7,6,9,10,12,11,15,13,14,0};
-        State solvable = new State(solvableBoard, 10);
+        State solvable = new State(solvableBoard);
         assertEquals(solvable.stateCanBeSolved(), true);
     }
 }
